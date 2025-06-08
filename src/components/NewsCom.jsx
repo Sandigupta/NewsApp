@@ -1,11 +1,124 @@
 import React, { Component } from 'react'
 import NewItem from './NewItem'
-import Loader from './Loader';
+import Loader from './Loader'
+import PropTypes from 'prop-types'
 
 
 
 export class NewCom extends Component {
-  // articals=[
+
+  static defaultProps = {
+    country: 'us',  
+    category:"science"
+  } 
+
+  static propTypes = {
+    country:PropTypes.string,
+    pageSize:PropTypes.number,
+    category:PropTypes.string
+  }
+  
+  constructor(){
+    super();
+    console.log("This is constructor");
+    this.state = {
+      articals: [],
+      loading: false,
+      page: 1,
+      showAlert: false
+    };
+  }
+  
+  async componentDidMount() {
+    console.log("cmd")
+    let data = await fetch(`https://newsapi.org/v2/top-headlines?country=us&category=${this.props.category}&apiKey=2b4a77c40ffb4ab5bddb535c3946710b&page=1&pageSize=${this.props.pageSize}`)
+    this.setState({loading:true})
+    let parseData = await data.json();
+    console.log(parseData.size);
+    this.setState({ articals: parseData.articles });
+    this.setState({
+      page: this.state.page + 1,
+      totalResult: parseData.totalResults,
+      loading: false
+    });
+    console.log(parseData.totalResults)
+}
+  // alertt = () => {
+  //   this.setState({
+  //     showAlert: true
+  //   });
+  // }
+  
+  handleNextClick = async () => {
+    console.log("Next");
+    if (this.state.page + 1 > (this.state.totalResult / this.props.pageSize)) {
+
+      alert("No more news found!")
+    } else {
+      let data = await fetch(`https://newsapi.org/v2/top-headlines?country=us&category=${this.props.category}&apiKey=2b4a77c40ffb4ab5bddb535c3946710b&page=${this.state.page+1}&pageSize=${this.props.pageSize}`)
+      this.setState({loading:true})
+      let parseData = await data.json();
+      console.log(parseData);
+      this.setState({
+        page: this.state.page + 1,
+        articals: parseData.articles,
+        loading:false
+      })
+
+    }
+   
+  }
+
+  handlePrevClick = async () => {
+    console.log("Previous");
+    
+    let data = await fetch(`https://newsapi.org/v2/top-headlines?country=us&category=${this.props.category}&apiKey=2b4a77c40ffb4ab5bddb535c3946710b&page=${this.state.page-1}&pageSize=${this.props.pageSize}`)
+    this.setState({loading:true})
+    let parseData = await data.json();
+    console.log(parseData);
+    this.setState({
+      page: this.state.page - 1,
+      articals: parseData.articles,
+      loading:false
+    })
+    
+  }
+
+  render() {
+    return (
+      <div >
+        <h2 className='text-center'>NewsMonkey- Top headline</h2>
+        {this.state.loading && <Loader/>}
+        <div className='row' >
+        {!this.state.loading && this.state.articals.map((ele)=>{ 
+          return <div className='col-md-4 my-2 ' key={ele.url}>
+            <NewItem title={ele.title?ele.title.slice(0,45):""} description={ele.description?ele.description.slice(0,88):""} imageUrl={!ele.urlToImage?"https://images.seattletimes.com/wp-content/uploads/2025/05/urnpublicidap.org7c119d11d37b2b5b0fa254154b4aba8eNew_Cosmic_Object_22090.jpg?d=1200x630":ele.urlToImage} newsUrl={ele.url} />
+          </div>} 
+        )}
+        </div>   
+        <div className='d-flex justify-content-between'>
+        <button type="button" className="btn btn-dark" onClick={this.handlePrevClick} disabled={this.state.page<=1}>&laquo; Previous</button>
+        <button type="button" className="btn btn-dark " onClick={this.handleNextClick} style={{width:"85px", height:""}}>Next &raquo;</button>
+        </div>
+
+        {/* <div>
+          {this.state.showAlert && (
+            alert("No more news found!")
+          )}
+        </div> */}
+      </div>
+      
+    )
+  }
+}
+
+export default NewCom
+
+
+
+
+
+// articals=[
   //   {
   //   "source": {
   //   "id": "the-verge",
@@ -72,105 +185,3 @@ export class NewCom extends Component {
   //   "content": "Apple today expanded the Messages via Satellite and Find My via Satellite features to Mexico, allowing iPhone users in Mexico to take advantage of Globalstar satellites for communication when cellula… [+1502 chars]"
   //   }
   // ]
-  constructor(){
-    super();
-    console.log("This is constructor");
-    this.state = {
-      articals: [],
-      loading: false,
-      page: 1,
-      showAlert: false
-    };
-  }
-  
-  async componentDidMount() {
-    console.log("cmd")
-    let data = await fetch(`https://newsapi.org/v2/top-headlines?country=us&apiKey=2b4a77c40ffb4ab5bddb535c3946710b&page=1&pageSize=${this.props.page}`)
-    this.setState({loading:true})
-    let parseData = await data.json();
-    console.log(parseData);
-    this.setState({ articals: parseData.articles });
-    this.setState({
-      page: this.state.page + 1,
-      totalResult: parseData.totalResults,
-      loading:false
-    })
-    
-}
-  // alertt = () => {
-  //   this.setState({
-  //     showAlert: true
-  //   });
-  // }
-  
-  handleNextClick = async () => {
-    console.log("Next");
-    if (this.state.page + 1 > (this.state.totalResult / this.props.page)) {
-      // alert("No new news found!")
-      // this.setState({
-      //   showAlert: true
-      // });
-      // this.alertt();
-      alert("No more news found!")
-    } else {
-      let data = await fetch(`https://newsapi.org/v2/top-headlines?country=us&apiKey=2b4a77c40ffb4ab5bddb535c3946710b&page=${this.state.page + 1}&pageSize=${this.props.page}`)
-      this.setState({loading:true})
-      let parseData = await data.json();
-      console.log(parseData);
-      this.setState({
-        page: this.state.page + 1,
-        articals: parseData.articles,
-        loading:false
-      })
-      // this.setState({
-      //   showAlert:false
-      // })
-
-    }
-   
-  }
-
-  handlePrevClick = async () => {
-    console.log("Previous");
-    
-    let data = await fetch(`https://newsapi.org/v2/top-headlines?country=us&apiKey=2b4a77c40ffb4ab5bddb535c3946710b&page=${this.state.page - 1}&pageSize=${this.props.page}`)
-    this.setState({loading:true})
-    let parseData = await data.json();
-    console.log(parseData);
-    this.setState({
-      page: this.state.page - 1,
-      articals: parseData.articles,
-      loading:false
-    })
-    
-  }
-
-  render() {
-    return (
-      <div >
-        <h2 className='text-center'>NewsMonkey- Top headline</h2>
-        {this.state.loading && <Loader/>}
-        <div className='row' >
-        {!this.state.loading && this.state.articals.map((ele)=>{ 
-          return <div className='col-md-4 my-2 ' key={ele.url}>
-            <NewItem title={ele.title?ele.title.slice(0,45):""} description={ele.description?ele.description.slice(0,88):""} imageUrl={!ele.urlToImage?"https://images.seattletimes.com/wp-content/uploads/2025/05/urnpublicidap.org7c119d11d37b2b5b0fa254154b4aba8eNew_Cosmic_Object_22090.jpg?d=1200x630":ele.urlToImage} newsUrl={ele.url} />
-          </div>} 
-        )}
-        </div>   
-        <div className='d-flex justify-content-between'>
-        <button type="button" className="btn btn-dark" onClick={this.handlePrevClick} disabled={this.state.page<=1}>&laquo; Previous</button>
-        <button type="button" className="btn btn-dark " onClick={this.handleNextClick} style={{width:"85px", height:""}}>Next &raquo;</button>
-        </div>
-
-        {/* <div>
-          {this.state.showAlert && (
-            alert("No more news found!")
-          )}
-        </div> */}
-      </div>
-      
-    )
-  }
-}
-
-export default NewCom
