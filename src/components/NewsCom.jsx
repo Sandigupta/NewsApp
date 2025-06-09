@@ -29,6 +29,8 @@ export class NewCom extends Component {
     };
   }
   
+  
+
   async componentDidMount() {
     console.log("cmd")
     let data = await fetch(`https://newsapi.org/v2/top-headlines?country=us&category=${this.props.category}&apiKey=2b4a77c40ffb4ab5bddb535c3946710b&page=1&pageSize=${this.props.pageSize}`)
@@ -92,8 +94,9 @@ export class NewCom extends Component {
         <div className='row' >
         {!this.state.loading && this.state.articals.map((ele)=>{ 
           return <div className='col-md-4 my-2 ' key={ele.url}>
-            <NewItem title={ele.title?ele.title.slice(0,45):""} description={ele.description?ele.description.slice(0,88):""} imageUrl={!ele.urlToImage?"https://images.seattletimes.com/wp-content/uploads/2025/05/urnpublicidap.org7c119d11d37b2b5b0fa254154b4aba8eNew_Cosmic_Object_22090.jpg?d=1200x630":ele.urlToImage} newsUrl={ele.url} />
-          </div>} 
+            <NewItem title={ele.title ? ele.title.slice(0, 45) : ""} description={ele.description ? ele.description.slice(0, 88) : ""} imageUrl={!ele.urlToImage ? "https://images.seattletimes.com/wp-content/uploads/2025/05/urnpublicidap.org7c119d11d37b2b5b0fa254154b4aba8eNew_Cosmic_Object_22090.jpg?d=1200x630" : ele.urlToImage}
+            newsUrl={ele.url} author={ele.author} date={ele.publishedAt} />
+          </div> } 
         )}
         </div>   
         <div className='d-flex justify-content-between'>

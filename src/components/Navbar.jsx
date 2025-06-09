@@ -8,7 +8,8 @@ export class Navbar extends Component {
   } 
 
   static propTypes = {
-    toggle:PropTypes.func
+    toggle: PropTypes.func,
+    bgcolor:PropTypes.string
   }
 
 
@@ -24,29 +25,29 @@ export class Navbar extends Component {
                 <div className="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul className="navbar-nav me-auto mb-2 mb-lg-0">
                     
-                    <li className="nav-item">
-                    <Link className="nav-link active" aria-current="page" onClick={()=>this.props.toggle("general")} to="/">Home</Link>
+                    <li className="nav-item" style={{backgroundColor: this.props.bgColor==='#fff'?'grey':'#fff'}} onClick={()=>this.props.toggle(this.props.bgColor)}>
+                    <Link className="nav-link active "  aria-current="page" to="/">Home</Link>
+                    </li>
+                    <li className="nav-item"style={{backgroundColor: this.props.bgColor==='#fff'?'grey':'#fff'}} onClick={()=>this.props.toggle(this.props.bgColor)}>
+                    <Link className="nav-link"  to="/business">Business</Link>
                     </li>
                     <li className="nav-item">
-                    <Link className="nav-link" onClick={()=>this.props.toggle("business")} to="/business">Business</Link>
+                    <Link className="nav-link"  to="/entertainment">Entertainment</Link>
                     </li>
                     <li className="nav-item">
-                    <Link className="nav-link" onClick={()=>this.props.toggle("entertainment")} to="/entertainment">Entertainment</Link>
+                    <Link className="nav-link"   to="/general">General</Link>
                     </li>
                     <li className="nav-item">
-                    <Link className="nav-link"  onClick={()=>this.props.toggle("general")} to="/general">General</Link>
+                    <Link className="nav-link"  to="/health">Health</Link>
                     </li>
                     <li className="nav-item">
-                        <Link className="nav-link" onClick={()=>this.props.toggle("health")} to="/health">Health</Link>
+                    <Link className="nav-link"  to="/science">Science</Link>
                     </li>
                     <li className="nav-item">
-                        <Link className="nav-link" onClick={()=>this.props.toggle("science")}  to="/science">Science</Link>
+                    <Link className="nav-link"  science to="/sports">Sports</Link>
                     </li>
                     <li className="nav-item">
-                        <Link className="nav-link" onClick={()=>this.props.toggle("sports")} science to="/sports">Sports</Link>
-                    </li>
-                    <li className="nav-item">
-                        <Link className="nav-link" onClick={()=>this.props.toggle("technology")} to="/technology">Technology</Link>
+                    <Link className="nav-link"  to="/technology">Technology</Link>
                     </li>
                    
                 </ul>
